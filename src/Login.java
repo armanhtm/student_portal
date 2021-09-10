@@ -8,13 +8,23 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import static java.awt.Frame.MAXIMIZED_BOTH;
-
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * login class which get username and password and show login panel
+ */
 public class Login implements ActionListener {
     private JFrame jFrame;
     private JTextField username;
     private JPasswordField password;
     private JPanel panel;
     private Source source;
+
+    /**
+     * constructor method
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public Login() throws IOException, ClassNotFoundException {
         source = new Source();
         panel =new JPanel();
@@ -27,6 +37,10 @@ public class Login implements ActionListener {
         jFrame.setLayout(null);
         jFrame.setVisible(true);
     }
+
+    /**
+     * make login panel
+     */
     public void addLoginPanel(){
         JLabel sign = new JLabel("Sign in to Portal");
         sign.setForeground(Color.black);
@@ -47,6 +61,7 @@ public class Login implements ActionListener {
         password.setBounds(0,85,250,30);
         panel.add(password);
         JButton loginButton=new JButton("Login");
+        loginButton.setFont(new Font("Arial", Font.BOLD, 12));
         loginButton.setBackground(Color.red);
         loginButton.setBounds(0,130,250,30);
         loginButton.setVisible(true);
@@ -71,6 +86,20 @@ public class Login implements ActionListener {
                 }
             }
         });
+        JButton showPassword = new JButton("show password");
+        showPassword.setFont(new Font("Arial", Font.BOLD, 12));
+        showPassword.setBounds(45,180,150,30);
+        showPassword.setBackground(Color.orange);
+        showPassword.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                password.setEchoChar((char)0);
+            }
+
+            public void mouseExited(MouseEvent e) {
+                password.setEchoChar('*');
+            }
+        });
+        panel.add(showPassword);
         jFrame.add(panel);
     }
 

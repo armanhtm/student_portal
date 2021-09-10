@@ -7,10 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.awt.Frame.MAXIMIZED_BOTH;
-
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * student user interface
+ */
 public class StudentUi implements ActionListener {
     private JPanel announce;
     private JPanel header;
@@ -18,6 +23,11 @@ public class StudentUi implements ActionListener {
     private Student student;
     private ChangePassword changePass;
     private Source source;
+
+    /**
+     * constructor method
+     * @param source
+     */
     public StudentUi(Source source){
         this.source = source;
         student = source.student();
@@ -29,6 +39,10 @@ public class StudentUi implements ActionListener {
         addAnnounce();
         jFrame.setVisible(true);
     }
+
+    /**
+     * make info panel
+     */
     public void addInfo(){
         header = new JPanel();
         header.setLayout(new GridLayout(1,2));
@@ -74,6 +88,10 @@ public class StudentUi implements ActionListener {
         jFrame.add(header,BorderLayout.PAGE_START);
 
     }
+
+    /**
+     * add option panel to Jframe
+     */
     public void addOptions(){
         JPanel options = new JPanel();
         options.setLayout(new GridLayout(6,1));
@@ -225,6 +243,11 @@ public class StudentUi implements ActionListener {
             }
 
             public void mousePressed(MouseEvent e) {
+                try {
+                    source.setStudentsArrayList();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
                 jFrame.setVisible(false);
                 jFrame.dispose();
             }
@@ -232,6 +255,10 @@ public class StudentUi implements ActionListener {
         options.add(signOut);
         jFrame.add(options,BorderLayout.LINE_START);
     }
+
+    /**
+     * add announce to main panel
+     */
     public void addAnnounce(){
         announce = new JPanel(new BorderLayout(0, 50));
         announce.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -293,6 +320,11 @@ public class StudentUi implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
     }
+
+    /**
+     * make Jpanel for increase credit
+     * @return Jpanel
+     */
     public JPanel setCredit(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -369,6 +401,11 @@ public class StudentUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * make panel for reserve food
+     * @return Jpanel
+     */
     public JPanel reserveFood(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -397,11 +434,17 @@ public class StudentUi implements ActionListener {
             }
 
             public void mousePressed(MouseEvent e) {
-                student.getListSelectedFoods().addObject((ArrayList)student.getListFoods().select());
-                announce.removeAll();
-                announce.add(student.getListFoods().getPanel());
-                announce.revalidate();
-                announce.repaint();
+                ArrayList temp = (ArrayList)student.getListFoods().select();
+                if(student.subCredit((int)temp.get(2))){
+                    student.getListSelectedFoods().addObject(temp);
+                    JOptionPane.showMessageDialog(jFrame, "Successful!", "Result", JOptionPane.INFORMATION_MESSAGE);
+                    header.removeAll();
+                    header.add(updateInfo());
+                    header.revalidate();
+                    header.repaint();
+                }
+                else
+                    JOptionPane.showMessageDialog(jFrame, "not enough!", "Result", JOptionPane.ERROR_MESSAGE);
             }
 
         });
@@ -415,6 +458,11 @@ public class StudentUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * make panel for show available courses
+     * @return Jpanel
+     */
     public JPanel joinCourse(){
             JPanel panel = new JPanel(new BorderLayout(0, 50));
             panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -446,11 +494,15 @@ public class StudentUi implements ActionListener {
                     ArrayList temp = (ArrayList) student.getListCourses().select();
                     temp.remove(temp.size() - 1);
                     temp.add("");
-                    student.getListSelectedCourses().addObject(temp);
-                    announce.removeAll();
-                    announce.add(student.getListCourses().getPanel());
-                    announce.revalidate();
-                    announce.repaint();
+                    if(student.checkForNewCourse((String)temp.get(2),(String)temp.get(3),(String)temp.get(4))){
+                        student.getListSelectedCourses().addObject(temp);
+                        source.addStudentToCourse(temp);
+                        JOptionPane.showMessageDialog(jFrame, "Successful!", "Result", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(jFrame, "Failed!", "Result", JOptionPane.ERROR_MESSAGE);
+                    }
+
                 }
 
             });
@@ -464,6 +516,11 @@ public class StudentUi implements ActionListener {
             panel.add(loginButton, BorderLayout.SOUTH);
             return panel;
     }
+
+    /**
+     * update header of Jframe
+     * @return ـJpanel
+     */
     public JPanel updateInfo(){
         JPanel header = new JPanel();
         header.setLayout(new GridLayout(1,2));
@@ -508,11 +565,16 @@ public class StudentUi implements ActionListener {
         header.add(date);
         return header;
     }
+
+    /**
+     * show jpanel of selected courses
+     * @return Jpanel
+     */
     public JPanel showSelectedCourses(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        JLabel label = new JLabel(" Please select foods you want to reserve ");
+        JLabel label = new JLabel(" your courses ");
         label.setBackground(Color.ORANGE);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setOpaque(true);
@@ -536,10 +598,7 @@ public class StudentUi implements ActionListener {
             }
 
             public void mousePressed(MouseEvent e) {
-                announce.removeAll();
-                announce.add(student.getListSelectedCourses().getPanel());
-                announce.revalidate();
-                announce.repaint();
+                JOptionPane.showMessageDialog(jFrame, "this option is not active!", "Result", JOptionPane.INFORMATION_MESSAGE);
             }
 
         });
@@ -553,11 +612,16 @@ public class StudentUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * make Jpanel for show selected foods
+     * @return Jpanel
+     */
     public JPanel showSelectedFoods(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        JLabel label = new JLabel(" Please select foods you want to reserve ");
+        JLabel label = new JLabel(" your foods ");
         label.setBackground(Color.ORANGE);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setOpaque(true);
@@ -568,7 +632,7 @@ public class StudentUi implements ActionListener {
         int labelWidth = label.getPreferredSize().width;
         int labelHeight = label.getPreferredSize().height + 10;
         label.setPreferredSize(new Dimension(labelWidth, labelHeight));
-        JButton loginButton = new JButton("order");
+        JButton loginButton = new JButton("remove");
         loginButton.setBackground(Color.red);
         loginButton.setForeground(Color.white);
         loginButton.addMouseListener(new MouseAdapter() {
@@ -581,10 +645,19 @@ public class StudentUi implements ActionListener {
             }
 
             public void mousePressed(MouseEvent e) {
-                announce.removeAll();
-                announce.add(student.getListSelectedFoods().getPanel());
-                announce.revalidate();
-                announce.repaint();
+                try {
+                    ArrayList temp = (ArrayList)student.getListSelectedFoods().select();
+                    student.payBack((int)temp.get(2));
+                    student.getListSelectedFoods().deleteRow();
+                    JOptionPane.showMessageDialog(jFrame, "Successful!", "Result", JOptionPane.INFORMATION_MESSAGE);
+                    header.removeAll();
+                    header.add(updateInfo());
+                    header.revalidate();
+                    header.repaint();
+                }
+                catch (Exception error){
+                    JOptionPane.showMessageDialog(jFrame, "Failed!", "Result", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
         });

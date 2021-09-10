@@ -4,15 +4,29 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * a class for making change password panel
+ */
 public class ChangePassword {
     private String header;
     private JTextField uNameField;
     private JPasswordField passwordField;
     private JButton loginButton;
+
+    /**
+     * constructor method
+     * @param head
+     */
     public ChangePassword(String head){
         this.header = head;
     }
+
+    /**
+     * make a panel for changing password
+     * @return Jpanel
+     */
     public JPanel changePassword(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -55,16 +69,36 @@ public class ChangePassword {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * method for changing the header of change password Jpanel
+     * @param head
+     */
     public void changeHeader(String head){
         if(head != null)
             this.header = head;
     }
+
+    /**
+     * get the username
+     * @return string
+     */
     public String getUsername(){
         return uNameField.getText();
     }
+
+    /**
+     * get the password
+     * @return string
+     */
     public String getPassword(){
         return passwordField.getText();
     }
+
+    /**
+     * get the button
+     * @return Jbutton
+     */
     public JButton getBotton(){
         return loginButton;
     }

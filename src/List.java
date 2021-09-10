@@ -8,7 +8,11 @@ import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
-
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * a class for make a Jtable with a checkbox
+ */
 public class List implements Serializable {
     private Object object;
     private JPanel panel=new JPanel();
@@ -21,6 +25,9 @@ public class List implements Serializable {
     }
 
 
+    /**
+     * update Jtable and checkbox
+     */
     public void startUI() {
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -51,12 +58,20 @@ public class List implements Serializable {
         });
     }
 
+    /**
+     * delete selected object
+     */
     public void deleteRow(){
         if (objects.contains(object))
             objects.remove(object);
         startUI();
     }
 
+    /**
+     * add grade to a selected student
+     * @param jPanel
+     * @return Jpanel
+     */
     public JPanel addGrade(JPanel jPanel) {
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -151,13 +166,28 @@ public class List implements Serializable {
         }
 
     }
+
+    /**
+     * get panel of Jtable
+     * @return Jpanel
+     */
     public JPanel getPanel(){
         return panel;
     }
+
+    /**
+     * add a new object to Jtable
+     * @param object
+     */
     public void addObject(ArrayList object){
         objects.add(object);
         startUI();
     }
+
+    /**
+     * return size of Jtable
+     * @return int
+     */
     public int getSize(){
         try {
             return objects.size();
@@ -166,9 +196,19 @@ public class List implements Serializable {
             return 0;
         }
     }
+
+    /**
+     * get Array list of objects
+     * @return Array list
+     */
     public ArrayList<ArrayList> getObjects(){
         return objects;
     }
+
+    /**
+     * get selected object
+     * @return object
+     */
     public Object select(){
         return object;
     }

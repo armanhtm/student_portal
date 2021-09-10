@@ -1,23 +1,32 @@
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.stream.StreamSupport;
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * teacher class for perform teacher logic
+ */
 public class Teacher implements Serializable {
-    private ArrayList<Course> courseArrayList;
+    private ArrayList<Course> courseArrayList = new ArrayList<>();
     private String userName;
     private String password;
     private List listCourses;
     private List listStudents;
     private ArrayList<ArrayList>students ;
     private ArrayList<ArrayList>courses ;
+
+    /**
+     * constructor method
+     */
     public Teacher(){
         students = new ArrayList<>();
         courses = new ArrayList<>();
-        courseArrayList = new ArrayList<>();
         String[] tempListCourses = new String[]{"name","time"
-                ,"first session","second session","capacity","units","check"};
+                ,"first session","second session","units","capacity","check"};
         String[] tempListStudent = new String[]{"username","course","grade","check"};
         listCourses = new List(tempListCourses,courses);
         listStudents = new List(tempListStudent,students);
+        setStudents();
     }
 
 /*
@@ -49,35 +58,71 @@ public class Teacher implements Serializable {
         return true;
     }
 */
+
+    /**
+     * get name of teacher
+     * @return name
+     */
     public String getName() {
         return userName;
     }
+
+    /**
+     * change password of teacher
+     * @param newPassword
+     * @return boolean
+     */
     public boolean changePassword(String newPassword){
         if(newPassword.length() < 8)
             return false;
         this.password = newPassword;
         return true;
     }
+
+    /**
+     * get password of teacher
+     * @return
+     */
     public String getPassword(){
         return password;
     }
 
+    /**
+     * set name of teacher
+     * @param name
+     */
     public void setName(String name) {
         this.userName = name;
     }
 
+    /**
+     * set password of teacher
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * get list of courses
+     * @return Jtable
+     */
     public List getListCourses() {
         return listCourses;
     }
 
+    /**
+     * get list of students
+     * @return Jtable
+     */
     public List getListStudents() {
         return listStudents;
     }
 
+    /**
+     * get username of teacher
+     * @return string
+     */
     public String getUserName() {
         return userName;
     }
@@ -88,8 +133,14 @@ public class Teacher implements Serializable {
         //courses.remove(course);
         //source.removeClass(course);
     //}
+
+    /**
+     * get courses that teacher added
+     * @return Arraylist
+     */
     public ArrayList<Course> getCourse () {
-        for (ArrayList temp : this.listCourses.getObjects()) {
+        courseArrayList = new ArrayList<>();
+        for (ArrayList temp : listCourses.getObjects()) {
             Course course = new Course();
             course.setNameField((String) temp.get(0));
             course.setTime((String) temp.get(1));
@@ -97,10 +148,24 @@ public class Teacher implements Serializable {
             course.setSecondSession((String) temp.get(3));
             course.setUnits((int) temp.get(4));
             course.setCapacity((int) temp.get(5));
-            course.setTeacher(this.userName);
+            course.setTeacher(userName);
             courseArrayList.add(course);
         }
         return courseArrayList;
+    }
+
+    /**
+     * set students for teacher for grading
+     */
+    public void setStudents() {
+        ArrayList temp = new ArrayList();
+        for (Course course : courseArrayList)
+            for (Student student : course.getStudents()) {
+                temp.add(student.getName());
+                temp.add(course.getName());
+                temp.add("");
+            }
+        students.add(temp);
     }
 }
 

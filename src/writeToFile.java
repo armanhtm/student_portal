@@ -1,5 +1,9 @@
 import java.io.*;
-
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * a class for writing to file
+ */
 public class writeToFile {
     private ObjectOutputStream out;
     private String address;
@@ -19,11 +23,21 @@ public class writeToFile {
         out=new ObjectOutputStream(new FileOutputStream(new File(address)));
 
     }
+
+    /**
+     * close file after writing
+     * @throws IOException
+     */
     public void closeFile() throws IOException {
         out.close();
 
     }
 
+    /**
+     * writing to a file
+     * @param obj
+     * @throws IOException
+     */
     public void writeObjectToFile(Object obj) throws IOException {
         try {
             out.writeObject(obj);

@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.awt.Frame.MAXIMIZED_BOTH;
-
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * teacher user interface
+ */
 public class TeacherUi implements ActionListener {
     private JPanel announce;
     private JPanel header;
@@ -18,6 +22,11 @@ public class TeacherUi implements ActionListener {
     private Teacher teacher;
     private ChangePassword changePass;
     private Source source;
+
+    /**
+     * constructor method
+     * @param source
+     */
     public TeacherUi(Source source) {
         this.source = source;
         teacher = source.teacher();
@@ -29,6 +38,10 @@ public class TeacherUi implements ActionListener {
         addOptions();
         jFrame.setVisible(true);
     }
+
+    /**
+     * add announce to main Jframe
+     */
     public void addAnnounce(){
         announce = new JPanel(new BorderLayout(0, 50));
         announce.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -88,6 +101,10 @@ public class TeacherUi implements ActionListener {
         announce.add(loginButton, BorderLayout.SOUTH);
         jFrame.add(announce,BorderLayout.CENTER);
     }
+
+    /**
+     * add info to main Jframe
+     */
     public void addInfo(){
         header = new JPanel();
         header.setLayout(new GridLayout(1,2));
@@ -129,6 +146,10 @@ public class TeacherUi implements ActionListener {
         jFrame.add(header,BorderLayout.PAGE_START);
 
     }
+
+    /**
+     * add options to main Jframe
+     */
     public void addOptions(){
         JPanel options = new JPanel();
         options.setLayout(new GridLayout(4,1));
@@ -243,8 +264,8 @@ public class TeacherUi implements ActionListener {
 
             public void mousePressed(MouseEvent e) {
                 try {
-                    //source.setCourseArrayList();
                     source.setTeacherArrayList();
+                    source.setCourseArrayList();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 } finally {
@@ -256,6 +277,11 @@ public class TeacherUi implements ActionListener {
         options.add(addCredit);
         jFrame.add(options,BorderLayout.LINE_START);
     }
+
+    /**
+     * add a new course by teacher
+     * @return Jpanel
+     */
     public JPanel addCourse(){
         ArrayList course = new ArrayList();
         JPanel panel = new JPanel(new BorderLayout(0, 50));
@@ -355,6 +381,11 @@ public class TeacherUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * show course of the teacher
+     * @return
+     */
     public JPanel showCourse(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -403,6 +434,11 @@ public class TeacherUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * show students of teacher
+     * @return Jpanel
+     */
     public JPanel showStudents(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));

@@ -1,7 +1,12 @@
 import java.io.*;
 import java.util.ArrayList;
-
-public class Source {
+import java.util.List;
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * source class which loads all information and write them again
+ */
+public class Source{
     private ArrayList<Teacher> teacherArrayList;
     private ArrayList<Student> studentsArrayList;
     private ArrayList<Food> foodsArrayList;
@@ -23,9 +28,21 @@ public class Source {
     private Teacher teacher;
     private String announcement;
 
+    /**
+     * constructor method
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public Source() throws IOException, ClassNotFoundException {
         set();
     }
+
+    /**
+     * read admin from file
+     * @return admin
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public Admin getAdmin() throws IOException, ClassNotFoundException {
         readToFileAdmin = new readToFile("admin.ser");
         try {
@@ -37,10 +54,18 @@ public class Source {
         }
         return admin;
     }
+
+    /**
+     * write admin and every thing that admin added to file
+     * @param admin
+     * @throws IOException
+     */
     public void setAdmin(Admin admin) throws IOException {
+        // write admin
         writeToFileAdmin = new writeToFile("admin.ser");
         writeToFileAdmin.writeObjectToFile(admin);
         writeToFileAdmin.closeFile();
+        // write teachers
         writeToFileTeacher = new writeToFile("teachers.ser");
         for(ArrayList temp : admin.getTeachers()){
             int flag = 0;
@@ -57,6 +82,7 @@ public class Source {
         }
         writeToFileTeacher.writeObjectToFile(teacherArrayList);
         writeToFileTeacher.closeFile();
+        // write students
         writeToFileStudent = new writeToFile("students.ser");
         for(ArrayList temp : admin.getStudents()){
             int flag = 0;
@@ -73,6 +99,7 @@ public class Source {
         }
         writeToFileStudent.writeObjectToFile(studentsArrayList);
         writeToFileStudent.closeFile();
+        // write foods
         writeToFileFood = new writeToFile("foods.ser");
         for(ArrayList temp : admin.getFoods()){
             Food food = new Food();
@@ -85,6 +112,12 @@ public class Source {
         writeToFileFood.writeObjectToFile(foodsArrayList);
         writeToFileFood.closeFile();
     }
+
+    /**
+     * read students from file
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void getStudentsArrayList() throws IOException, ClassNotFoundException {
         readToFileStudents = new readToFile("students.ser");
         try {
@@ -95,6 +128,12 @@ public class Source {
             studentsArrayList = new ArrayList<>();
         }
     }
+
+    /**
+     * read teachers from file
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void getTeacherArrayList() throws IOException, ClassNotFoundException {
         readToFileTeacher = new readToFile("teachers.ser");
         try {
@@ -105,6 +144,12 @@ public class Source {
             teacherArrayList = new ArrayList<>();
         }
     }
+
+    /**
+     * read foods from file
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void getFoodsArrayList() throws IOException, ClassNotFoundException {
         readToFileFood = new readToFile("foods.ser");
         try {
@@ -115,8 +160,14 @@ public class Source {
             foodsArrayList = new ArrayList<>();
         }
     }
+
+    /**
+     * read courses from file
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void getCourseArrayList() throws IOException, ClassNotFoundException {
-        readToFileFood = new readToFile("courses.ser");
+        readToFileCourse= new readToFile("courses.ser");
         try {
             courseArrayList = (ArrayList<Course>) readToFileCourse.readFromFile();
             readToFileCourse.closeConnection();
@@ -125,23 +176,39 @@ public class Source {
             courseArrayList = new ArrayList<>();
         }
     }
+
+    /**
+     * update teachers and write it to file
+     * @throws IOException
+     */
     public void setTeacherArrayList() throws IOException {
         teacherArrayList.add(teacher);
         writeToFileTeacher = new writeToFile("teachers.ser");
         writeToFileTeacher.writeObjectToFile(teacherArrayList);
         writeToFileTeacher.closeFile();
     }
+
+    /**
+     * update teachers and write it to file
+     * @throws IOException
+     */
     public void setStudentsArrayList() throws IOException {
         studentsArrayList.add(student);
         writeToFileStudent = new writeToFile("students.ser");
         writeToFileStudent.writeObjectToFile(studentsArrayList);
         writeToFileStudent.closeFile();
     }
+
+    /**
+     * update courses and write it to file
+     * @throws IOException
+     */
     public void setCourseArrayList() throws IOException {
-        courseArrayList = new ArrayList<>();
-        for(Teacher tch : teacherArrayList)
-            for(int i = 0 ; i < tch.getCourse().size() ; i++)
+        for(Teacher tch : teacherArrayList) {
+            for (int i = 0; i < tch.getCourse().size(); i++) {
                 courseArrayList.add(tch.getCourse().get(i));
+            }
+        }
         writeToFileCourse = new writeToFile("courses.ser");
         writeToFileCourse.writeObjectToFile(courseArrayList);
         writeToFileCourse.closeFile();
@@ -177,14 +244,34 @@ public class Source {
         //this.admin =
    //}
      */
+
+    /**
+     * get teachers
+     * @return Arraylist
+     */
     public ArrayList getTeacher(){
         return teacherArrayList;
     }
+
+    /**
+     * get students
+     * @return Arraylist
+     */
     public ArrayList getStudent(){
         return studentsArrayList;
     }
+
+    /**
+     * find user and show its user interface
+     * @param username
+     * @param password
+     * @return boolean
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public boolean findUser(String username,String password) throws IOException, ClassNotFoundException {
         set();
+        admin.setListCourses(courseArrayList);
         if(admin.getName().equals(username) && admin.getPassword().equals(password)) {
             new AdminUi(this);
             return true;
@@ -199,7 +286,7 @@ public class Source {
         for(Student std : studentsArrayList)
             if(std.getName().equals(username) && std.getPassword().equals(password)){
                 student = std;
-                student.setCourses(setCourseForStudent());
+                student.setCourses(admin.getListCourses());
                 student.setFoods(admin.getListFoods());
                 studentsArrayList.remove(std);
                 new StudentUi(this);
@@ -207,27 +294,28 @@ public class Source {
             }
         return false;
     }
+
+    /**
+     * get current teacher
+     * @return teacher
+     */
     public Teacher teacher(){
         return teacher;
     }
+
+    /**
+     * get current student
+     * @return student
+     */
     public Student student(){
         return student;
     }
-    public ArrayList<ArrayList> setCourseForStudent(){
-        ArrayList<ArrayList> courses = new ArrayList<>();
-        for(Course course : courseArrayList){
-            ArrayList tempCourse = new ArrayList();
-            tempCourse.add(course.getTeacher());
-            tempCourse.add(course.getName());
-            tempCourse.add(course.getTime());
-            tempCourse.add(course.getFirstSession());
-            tempCourse.add(course.getSecondSession());
-            tempCourse.add(course.getUnits());
-            tempCourse.get(course.getCapacity());
-            courses.add(tempCourse);
-        }
-        return courses;
-    }
+
+    /**
+     * load all data from file to ram memory
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void set() throws IOException, ClassNotFoundException {
         getFoodsArrayList();
         getStudentsArrayList();
@@ -237,11 +325,37 @@ public class Source {
         setAnnouncement();
     }
 
+    /**
+     * get announce
+     * @return string
+     */
     public String getAnnouncement() {
         return announcement;
     }
 
+    /**
+     * set announce
+     */
     public void setAnnouncement() {
         this.announcement = admin.getAnnoucements();
+    }
+
+    /**
+     * get current admin
+     * @return admin
+     */
+    public Admin Admin(){
+        return admin;
+    }
+
+    /**
+     * add student to courses that they had picked up
+     * @param temp
+     */
+    public void addStudentToCourse(ArrayList temp){
+        for(Course course : courseArrayList){
+            if(temp.get(0).equals(course.getTeacher()) && temp.get(1).equals(course.getName()) && temp.get(2).equals(course.getTime()))
+                course.addStudent(student);
+        }
     }
 }

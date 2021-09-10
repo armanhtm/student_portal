@@ -8,8 +8,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import static java.awt.Frame.MAXIMIZED_BOTH;
+/**
+ * @author Arman Hatami
+ * @version 1.0
+ * admin user interface
+ */
 
 public class AdminUi implements ActionListener {
     private Admin admin;
@@ -17,17 +21,29 @@ public class AdminUi implements ActionListener {
     private JPanel announce;
     private Source source;
     private ChangePassword changePass;
+
+    /**
+     * constructor method
+     * @param source
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public AdminUi(Source source) throws IOException, ClassNotFoundException {
         this.source = source;
-        this.admin = source.getAdmin();
+        this.admin = source.Admin();
         jFrame = new JFrame();
         jFrame.setExtendedState(MAXIMIZED_BOTH);
         jFrame.setLayout(new BorderLayout(100,100));
+        //setting method and adjust panel
         addAnnounce();
         addInfo();
         addOptions();
         jFrame.setVisible(true);
     }
+
+    /**
+     * make the information panel of main Jframe
+     */
     public void addInfo(){
         JPanel header = new JPanel();
         header.setLayout(new GridLayout(1,2));
@@ -107,7 +123,7 @@ public class AdminUi implements ActionListener {
     }
     public void addOptions(){
         JPanel options = new JPanel();
-        options.setLayout(new GridLayout(6,1));
+        options.setLayout(new GridLayout(7,1));
         options.setPreferredSize(new Dimension(300,500));
         JButton announcement = new JButton("add announcement");
         announcement.setBackground(Color.WHITE);
@@ -185,6 +201,25 @@ public class AdminUi implements ActionListener {
             }
         });
         options.add(foods);
+        JButton courses = new JButton("show courses");
+        courses.setBackground(Color.WHITE);
+        courses.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                courses.setBackground(Color.BLUE);
+            }
+
+            public void mouseExited(MouseEvent e) {
+                courses.setBackground(Color.WHITE);
+            }
+
+            public void mousePressed(MouseEvent e) {
+                announce.removeAll();
+                announce.add(showCourses());
+                announce.revalidate();
+                announce.repaint();
+            }
+        });
+        options.add(courses);
         JButton changePassword = new JButton("change password");
         changePassword.setBackground(Color.WHITE);
         options.add(changePassword);
@@ -271,6 +306,11 @@ public class AdminUi implements ActionListener {
         options.add(exit);
         jFrame.add(options,BorderLayout.LINE_START);
     }
+
+    /**
+     * method for design a panel to add announcement
+     * @return Jpanel
+     */
     public JPanel addAnnounce(){
         announce = new JPanel(new BorderLayout(0, 50));
         announce.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -319,6 +359,11 @@ public class AdminUi implements ActionListener {
         jFrame.add(announce,BorderLayout.CENTER);
         return announce;
     }
+
+    /**
+     * make the panel of showing students
+     * @return Jpanel
+     */
     public JPanel addStudent(){
         ArrayList student = new ArrayList();
         JPanel panel = new JPanel(new BorderLayout(0, 50));
@@ -391,6 +436,11 @@ public class AdminUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * make panel of adding new teacher
+     * @return Jpanel
+     */
     public JPanel addTeacher(){
         ArrayList teacher = new ArrayList();
         JPanel panel = new JPanel(new BorderLayout(0, 50));
@@ -463,6 +513,11 @@ public class AdminUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * make panel for adding food
+     * @return Jpanel
+     */
     public JPanel addFood(){
         ArrayList food = new ArrayList();
         JPanel panel = new JPanel(new BorderLayout(0, 50));
@@ -549,6 +604,11 @@ public class AdminUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * make panel for show added foods
+     * @return
+     */
     public JPanel showFoods(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -597,6 +657,11 @@ public class AdminUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * make a panel for show teachers
+     * @return Jpanel
+     */
     public JPanel showTeachers(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -645,6 +710,11 @@ public class AdminUi implements ActionListener {
         panel.add(loginButton, BorderLayout.SOUTH);
         return panel;
     }
+
+    /**
+     * make a panel for showing
+     * @return Jpanel
+     */
     public JPanel showStudents(){
         JPanel panel = new JPanel(new BorderLayout(0, 50));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -694,6 +764,52 @@ public class AdminUi implements ActionListener {
         return panel;
     }
 
+    /**
+     * make a panel for showing courses
+     * @return
+     */
+    public JPanel showCourses(){
+        JPanel panel = new JPanel(new BorderLayout(0, 50));
+        panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        JLabel label = new JLabel(" added courses to portal by teachers");
+        label.setBackground(Color.ORANGE);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setOpaque(true);
+
+        Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
+        label.setBorder(border);
+
+        int labelWidth = label.getPreferredSize().width;
+        int labelHeight = label.getPreferredSize().height + 10;
+        label.setPreferredSize(new Dimension(labelWidth, labelHeight));
+        JButton loginButton = new JButton("select");
+        loginButton.setBackground(Color.red);
+        loginButton.setForeground(Color.white);
+        loginButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                loginButton.setBackground(Color.green);
+            }
+
+            public void mouseExited(MouseEvent e) {
+                loginButton.setBackground(Color.red);
+            }
+
+            public void mousePressed(MouseEvent e) {
+                JOptionPane.showMessageDialog(jFrame, "you can not do anything!", "Result", JOptionPane.ERROR_MESSAGE);
+            }
+
+        });
+
+        int buttonWidth = loginButton.getPreferredSize().width;
+        int buttonHeight = loginButton.getPreferredSize().height + 10;
+        loginButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(admin.getListCourses().getPanel(), BorderLayout.CENTER);
+        panel.add(loginButton, BorderLayout.SOUTH);
+        return panel;
+    }
     public void actionPerformed(ActionEvent e) {
 
     }
